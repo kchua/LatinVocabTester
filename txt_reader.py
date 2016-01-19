@@ -15,10 +15,23 @@ class VocabFile:
     def test(self, aspect, given, filter=lambda x: True):
         for word in self.vocab_list:
             if filter(word):
-                word.test(aspect, given)
+                if word.test(aspect, given):
+                    print("Correct!")
+                else:
+                    print("Incorrect! The correct answer is: " + getattr(word, aspect))
+                    while True:
+                        try:
+                            response = input("Please retype the correct answer to proceed: ")
+                            assert response == getattr(word, aspect)
+                            break
+                        except AssertionError:
+                            print("Invalid. Please try again")
 
 ############################# Helper Functions ################################
 
 def create_noun(line):
     match = re.search(r'(\S*)\s+(\S*)\s+(\S*)\s+"([\S\s]+)"', line)
     return Noun(match.group(1), match.group(2), match.group(3), match.group(4))
+
+test = VocabFile('test.txt')
+test.test('noun', 'english', lambda x: x.gender == 'm')
