@@ -13,9 +13,12 @@ class VocabFile:
         assert self.vocab_list != [], ".txt file is empty!"
 
     def test(self, aspect, given, f=lambda x: True):
+        score, total = 0, 0
         for word, _ in self.filter(f).items():
+            total += 1
             if word.test(aspect, given):
                 print("Correct!")
+                score += 1
             else:
                 print("Incorrect! The correct answer is: " + getattr(word, aspect))
                 while True:
@@ -25,6 +28,7 @@ class VocabFile:
                         break
                     except AssertionError:
                         print("Invalid. Please try again")
+        print(str(score) + " out of " + str(total) + " correct.")
 
     def filter(self, f):
         '''Returns words in the vocabulary list that satisfy a condition governed
