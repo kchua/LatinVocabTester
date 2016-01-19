@@ -9,7 +9,16 @@ class Noun:
         response = input("What is the " + remove_underscores(aspect) + " for " + getattr(self, given) + "? ")
         return getattr(self, aspect) == response
 
-    
+class Preposition:
+    def __init__(self, prep, complementary_case, english):
+        self.prep = prep
+        self.complementary_case = complementary_case
+        self.english = english
+
+    def test(self, aspect, given="english"):
+        response = input("What is the " + remove_underscores(aspect) + " for " + getattr(self, given) + "? ")
+        return getattr(self, aspect) == response
+
 ############################# Helper Functions ################################
 
 import re
