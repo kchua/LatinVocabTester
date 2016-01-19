@@ -7,6 +7,7 @@ class VocabFile:
         self.vocab_list = []
         line = f.readline()
         while line != '':
+            #print(line)
             self.vocab_list.append(create_noun(line))
             line = f.readline()
         assert self.vocab_list != [], ".txt file is empty!"
@@ -19,5 +20,5 @@ class VocabFile:
 ############################# Helper Functions ################################
 
 def create_noun(line):
-    match = re.search(r'(.*)[ ]+(.*)[ ]+(.*)[ ]+"(.*)"', line)
+    match = re.search(r'(\S*)\s+(\S*)\s+(\S*)\s+"([\S\s]+)"', line)
     return Noun(match.group(1), match.group(2), match.group(3), match.group(4))
