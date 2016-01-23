@@ -12,22 +12,30 @@ class VocabFile:
             line = f.readline()
         assert self.vocab_list != [], ".txt file is empty!"
 
-    def test(self, aspect, given, f=lambda x: True):
+    def test(self, given, *aspects):
         score, total = 0, 0
-        for word, _ in self.filter(f).items():
+        aspects = list(aspects)
+        for word, _ in self.filter(lambda x: True).items():
             total += 1
-            if word.test(aspect, given):
-                print("Correct!")
-                score += 1
+            while True:
+                try:
+                    is_correct_response = word.test(given, aspects)
+                    break
+                except AssertionError as e:
+                    print(e)
+            if is_correct_response:
+                    print("Correct!")
+                    score += 1
             else:
-                print("Incorrect! The correct answer is: " + getattr(word, aspect))
+                print("Incorrect! The correct answer is: " + correct_answer(word, aspects))
                 while True:
                     try:
                         response = input("Please retype the correct answer to proceed: ")
-                        assert response == getattr(word, aspect)
+                        assert response == correct_answer(word, aspects)
                         break
-                    except AssertionError:
-                        print("Invalid. Please try again")
+                    except AssertionError as e:
+                        print(e)
+
         print(str(score) + " out of " + str(total) + " correct.")
 
     def filter(self, f):
@@ -46,4 +54,11 @@ def create_noun(line):
     match = re.search(r'(\S*)\s+(\S*)\s+(\S*)\s+"([\S\s]+)"', line)
     return Noun(match.group(1), match.group(2), match.group(3), match.group(4))
 
+def correct_answer(word, aspects):
+    answer = ""
+    for aspect in aspects:
+        answer += getattr(word, aspect) + " "
+    return answer.strip()
+
 test = VocabFile('test.txt')
+test.test('english', 'noun', 'singular_genitive', 'gender')

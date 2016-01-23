@@ -5,8 +5,9 @@ class Noun:
         self.gender = gender
         self.english = english
 
-    def test(self, given, *aspects):
+    def test(self, given, aspects):
         response = input("What is the " + separate_by_commas(aspects) + " for " + getattr(self, given) + "? ").split()
+        assert len(response) == len(aspects), "Incomplete answer. Please try again."
         i = 0
         for aspect in aspects:
             if getattr(self, aspect) != response[i]:
