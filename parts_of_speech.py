@@ -5,11 +5,16 @@ class Noun:
         self.gender = gender
         self.english = english
 
-    def test(self, aspect, given="english"):
-        response = input("What is the " + remove_underscores(aspect) + " for " + getattr(self, given) + "? ")
-        return getattr(self, aspect) == response
+    def test(self, given, *aspects):
+        response = input("What is the " + separate_by_commas(aspects) + " for " + getattr(self, given) + "? ").split()
+        i = 0
+        for aspect in aspects:
+            if getattr(self, aspect) != response[i]:
+                return False
+            i += 1
+        return True
 
-    
+
 ############################# Helper Functions ################################
 
 import re
@@ -20,3 +25,12 @@ def remove_underscores(string):
         return string
     else:
         return remove_underscores(match.group(1)) + ' ' + match.group(2)
+
+def separate_by_commas(aspects, called_before= False):
+    if len(aspects) == 1:
+        if called_before:
+            return 'and ' + remove_underscores(aspects[0])
+        else:
+            return remove_underscores(aspects[0])
+    else:
+        return remove_underscores(aspects[0]) + ', ' + separate_by_commas(aspects[1:], True)
